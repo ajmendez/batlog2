@@ -22,7 +22,7 @@ def parse_date(line):
     try:
         return time.mktime(parser.parse(line).timetuple())
     except:
-        return time.mktime(datetime.fromtimestamp(int(line).timetuple()))
+        return time.mktime(datetime.fromtimestamp(int(line)).timetuple())
 
 def parse(filename, outfile):
     out = []
