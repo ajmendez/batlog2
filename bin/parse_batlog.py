@@ -3,6 +3,7 @@ import os
 import re
 import time
 import json
+import subprocess
 from dateutil import parser
 from datetime import datetime
 
@@ -30,7 +31,8 @@ def parse(filename, outfile):
     
     if os.path.exists(outfile):
         print 'Output file already exists: {}'.format(outfile)
-        return
+        subprocess.call(['rsync',outfile,outfile.replace('.json', '.1.json')])
+        # return
     
     with open(filename, 'r') as f:
         for line in f.readlines():

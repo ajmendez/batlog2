@@ -4,7 +4,7 @@ import json
 import pylab
 import numpy as np
 from datetime import datetime
-from pysurvey.plot import setup, dateticks, hist
+from pysurvey.plot import setup, dateticks, hist, minmax, embiggen
 from parse_batlog import OUTFILENAME as FILENAME
 from matplotlib.dates import date2num
 
@@ -12,11 +12,11 @@ def make():
     tag = 'Voltage'
     tag = 'CurrentCapacity'
     data = json.load(open(FILENAME,'r'))
-    date = [datetime.fromtimestamp(x['date']) for x in data if len(x) > 1]
+    date = date2num([datetime.fromtimestamp(x['date']) for x in data if len(x) > 1])
     amp  = [x[tag] for x in data if len(x) > 1]
     
     damp = np.diff(amp)
-    ddate = date2num(date[:-1]) + np.diff(date2num(date))/2.0
+    ddate = date[:-1] + np.diff(date)/2.0
     uii = np.where(damp > 2)
     dii = np.where(damp < -2)
     print len(data)
@@ -25,53 +25,67 @@ def make():
     plot_params = dict(
         marker = 's',
         markersize=2,
-        alpha=0.75,
+        alpha=0.2,
         linestyle='_',
+        markeredgewidth=0,
+        markeredgecolor='none',
     )
     
+    xr = embiggen(minmax(date), 0.02, 'both')
     yr = [0,7000]
     dyr = [-80,80]
     
     
     setup(figsize=(16,8))
     
-    setup(subplt=(2,3,1), xlabel='Date', ylabel=tag, yr=yr, autoticks=True)
+    setup(subplt=(2,3,1), autoticks=True,
+          xlabel='Date', xr=xr,
+          ylabel=tag, yr=yr)
     pylab.plot(date, amp, **plot_params)
     dateticks('%Y-%m-%d')
     
-    tmp = date2num(date) % 7.0
-    setup(subplt=(2,3,2), xlabel='Day of Week', ylabel=tag, yr=yr, autoticks=True,
-          xtickv=np.arange(7)+0.5, xr=[0,7], 
-          xticknames='sun mon tue wed thur fri sat'.split())
+    tmp = date % 7.0
+    setup(subplt=(2,3,2), autoticks=True,
+          xlabel='Day of Week', 
+          xtickv=np.arange(7), xr=[0,7], 
+          xticknames='sun mon tue wed thur fri sat'.split(),
+          ylabel=tag, yr=yr)
     pylab.plot(tmp, amp, **plot_params)
     
-    tmp = (date2num(date) % 1.0) * 24.0
-    setup(subplt=(2,3,3), xlabel='Hour of Day', xr=[0,24],
-          ylabel=tag, yticks=False, yr=yr, autoticks=True)
+    tmp = (date % 1.0) * 24.0
+    setup(subplt=(2,3,3), autoticks=True,
+          xlabel='Hour of Day', xr=[0,24],
+          xtickv=np.arange(0,24,4), 
+          ylabel=tag, yr=yr)
     pylab.plot(tmp, amp, **plot_params)
     # dateticks('%Y-%m-%d')
     
     
     
     
-    setup(subplt=(2,3,4), xlabel='Date', ylabel='Delta', yr=dyr, autoticks=True)
+    setup(subplt=(2,3,4), autoticks=True, 
+          xlabel='Date', xr=xr,
+          ylabel='Delta', yr=dyr)
     pylab.plot(ddate, damp, **plot_params)
     dateticks('%Y-%m-%d')
     
     
-    tmp = (date2num(date) % 7.0)[:-1]
-    setup(subplt=(2,3,5), xlabel='Day of Week', ylabel=tag, yr=dyr, autoticks=True,
+    tmp = (date % 7.0)[:-1]
+    setup(subplt=(2,3,5), autoticks=True,
+          xlabel='Day of Week',
           xtickv=np.arange(7)+0.5, xr=[0,7], 
-          xticknames='sun mon tue wed thur fri sat'.split())
+          xticknames='sun mon tue wed thur fri sat'.split(),
+          ylabel=tag, yr=dyr)
     pylab.plot(tmp, damp, **plot_params)
     hist(tmp[uii], np.linspace(0,7,90), alpha=0.5, norm=dyr[1], filled=True)
     hist(tmp[dii], np.linspace(0,7,90), alpha=0.5, norm=dyr[0], filled=True)
     
-    tmp = ((date2num(date) % 1.0) * 24.0)[:-1]
-    setup(subplt=(2,3,6), xlabel='Hour of Day', xr=[0,24],
-          ylabel=tag, yr=dyr, autoticks=True,
+    tmp = ((date % 1.0) * 24.0)[:-1]
+    setup(subplt=(2,3,6), autoticks=True,
+          xlabel='Hour of Day', xr=[0,24],
           xtickv=np.arange(0,24,4), xtickrotate=90,
-          xticknames='mid 4am 8am noon 4pm 8pm  '.split())
+          xticknames='mid 4am 8am noon 4pm 8pm  '.split(),
+          ylabel=tag, yr=dyr)
     pylab.plot(tmp, damp, **plot_params)
     hist(tmp[uii], np.linspace(0,24,50), alpha=0.5, norm=dyr[1], filled=True)
     hist(tmp[dii], np.linspace(0,24,50), alpha=0.5, norm=dyr[0], filled=True)
