@@ -47,15 +47,16 @@ def make():
     tmp = date % 7.0
     setup(subplt=(2,3,2), autoticks=True,
           xlabel='Day of Week', 
-          xtickv=np.arange(7), xr=[0,7], 
+          xtickv=np.arange(7), xr=[-0.2,6.2], 
           xticknames='sun mon tue wed thur fri sat'.split(),
           ylabel=tag, yr=yr)
     pylab.plot(tmp, amp, **plot_params)
     
     tmp = (date % 1.0) * 24.0
     setup(subplt=(2,3,3), autoticks=True,
-          xlabel='Hour of Day', xr=[0,24],
-          xtickv=np.arange(0,24,4), 
+          xlabel='Hour of Day', xr=[-0.4,24.4],
+          xtickv=np.arange(0,25,4), xtickrotate=dict(rotation=90, ha='center'),
+          xticknames='mid 4am 8am noon 4pm 8pm  mid'.split(),
           ylabel=tag, yr=yr)
     pylab.plot(tmp, amp, **plot_params)
     # dateticks('%Y-%m-%d')
@@ -67,13 +68,13 @@ def make():
           xlabel='Date', xr=xr,
           ylabel='Delta', yr=dyr)
     pylab.plot(ddate, damp, **plot_params)
-    dateticks('%Y-%m-%d')
+    dateticks('%Y-%m-%d', ha='center')
     
     
     tmp = (date % 7.0)[:-1]
     setup(subplt=(2,3,5), autoticks=True,
           xlabel='Day of Week',
-          xtickv=np.arange(7)+0.5, xr=[0,7], 
+          xtickv=np.arange(7), xr=[-0.2,6.2], 
           xticknames='sun mon tue wed thur fri sat'.split(),
           ylabel=tag, yr=dyr)
     pylab.plot(tmp, damp, **plot_params)
@@ -82,9 +83,9 @@ def make():
     
     tmp = ((date % 1.0) * 24.0)[:-1]
     setup(subplt=(2,3,6), autoticks=True,
-          xlabel='Hour of Day', xr=[0,24],
-          xtickv=np.arange(0,24,4), xtickrotate=90,
-          xticknames='mid 4am 8am noon 4pm 8pm  '.split(),
+          xlabel='Hour of Day', xr=[-0.4,24.4],
+          xtickv=np.arange(0,25,4), xtickrotate=dict(rotation=90, ha='center'),
+          xticknames='mid 4am 8am noon 4pm 8pm  mid'.split(),
           ylabel=tag, yr=dyr)
     pylab.plot(tmp, damp, **plot_params)
     hist(tmp[uii], np.linspace(0,24,50), alpha=0.5, norm=dyr[1], filled=True)
