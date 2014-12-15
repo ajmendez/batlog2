@@ -34,7 +34,9 @@ def make():
     xr = embiggen(minmax(date), 0.02, 'both')
     yr = [0,7000]
     dyr = [-80,80]
-    
+    if np.max(amp) > 7000:
+        yr = [0,10000]
+        dyr = [-100,100]
     
     setup(figsize=(16,8))
     
