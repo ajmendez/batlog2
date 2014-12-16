@@ -6,7 +6,7 @@ import numpy as np
 from datetime import datetime
 from pysurvey.plot import setup, dateticks, hist, minmax, embiggen
 from parse_batlog import OUTFILENAME as FILENAME
-from matplotlib.dates import date2num
+from matplotlib.dates import date2num, num2date
 
 def make():
     tag = 'Voltage'
@@ -41,6 +41,7 @@ def make():
     setup(figsize=(16,8))
     
     setup(subplt=(2,3,1), autoticks=True,
+          title='Last Recorded: {}'.format(num2date(date[-1])),
           xlabel='Date', xr=xr,
           ylabel=tag, yr=yr)
     pylab.plot(date, amp, **plot_params)
@@ -48,6 +49,7 @@ def make():
     
     tmp = date % 7.0
     setup(subplt=(2,3,2), autoticks=True,
+          title='Current Date: {}'.format(datetime.now()),
           xlabel='Day of Week', 
           xtickv=np.arange(7), xr=[-0.2,6.2], 
           xticknames='sun mon tue wed thur fri sat'.split(),
