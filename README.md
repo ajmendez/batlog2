@@ -2,10 +2,7 @@ batlog
 ======
 Tracking your Mac's battery useage, with data saved every minute!
 
-As an example, includes 1 Year of my 2012 MacBook Air's. See blog post here: 
-http://www.ifweassume.com/2013/08/the-de-evolution-of-my-laptop-battery.html
 
-Note: The data file is a litle ugly, but nothing a simple parser can't fix.
 
 #Install Guide
 
@@ -40,3 +37,14 @@ At any time you can see what is in your cron job list by typing:
     $ crontab -l
 
 Happy data gathering!
+
+
+
+# Note
+
+Originally from Jim Davenport -- If We Assume:
+
+Note: The data file is a litle ugly, but nothing a simple parser can't fix.
+As an example, includes 1 Year of my 2012 MacBook Air's. See blog post here: 
+http://www.ifweassume.com/2013/08/the-de-evolution-of-my-laptop-battery.html
+
