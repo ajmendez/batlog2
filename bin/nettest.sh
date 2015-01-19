@@ -1,5 +1,6 @@
 #!/bin/bash
 
+date
 
-date "+%s" >> ~/data/.netlog.dat
+echo "$(date "+%s") | $(date)" >> ~/data/.netlog.dat
 /usr/sbin/netstat -ib >> ~/data/.netlog.dat
